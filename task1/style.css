@@ -104,13 +104,13 @@ section {
   margin: 0 0 12px 0;
 }
 
+.about p:last-child {
+  margin-bottom: 0;
+}
+
 .track {
   color: #980fba;
   font-weight: 600;
-}
-
-.about p:last-child {
-  margin-bottom: 0;
 }
 
 /* образование */  
