@@ -59,7 +59,7 @@
               <li>Групповые тренировки</li>
               <li>Зона кроссфита</li>
             </ul>
-            <a href="#feedback" class="btn">Записаться</a>
+            <a href="#feedback" class="btn--outline">Записаться</a>
           </article>
 
           <article class="card">
@@ -93,28 +93,30 @@
           <h2 class="section-title">Записаться на пробное занятие</h2>
 
           <form class="form" action="#">
-            <div class="form__field">
-              <label for="name">Имя *</label>
+              <div class="form__field">
+              <label for="name">Ваше имя *</label>
               <input type="text" id="name" name="name" placeholder="Иван Иванов" required>
             </div>
             <div class="form__field">
-              <label for="email">Email *</label>
-              <input type="email" id="email" name="email" placeholder="you@example.com" required>
+              <label for="phone">Телефон *</label>
+              <input type="tel" id="phone" name="phone" placeholder="+375 (29) XXX-XX-XX" required>
             </div>
             <div class="form__field">
-              <label for="message">Сообщение</label>
-              <textarea id="message" name="message" rows="4" placeholder="Ваша цель тренировок"></textarea>
+              <label for="message">Комментарий</label>
+              <textarea id="message" name="message" rows="4" placeholder="Какая цель тренировок?"></textarea>
             </div>
-            <button type="submit" class="btn btn--submit">Отправить</button>
+            <button type="submit" class="btn btn--submit">Отправить заявку</button>
           </form>
         </div>
       </section>
     </main>
 
     <footer class="footer">
-      <p>&copy; 2026 PULSE GYM. Все права защищены.</p>
+      <div class="footer__info">
+        <p>&copy; 2026 PULSE GYM. Все права защищены.</p>
+      </div>
       <div class="footer__contacts">
-        <a href="tel:+375291112233">+375 (44) 141-67-00</a>
+        <a href="tel:+375291112233">+375 (29) 111-22-33</a>
         <a href="mailto:hello@pulsegym.by">hello@pulsegym.by</a>
       </div>
     </footer>
