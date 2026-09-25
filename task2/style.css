@@ -46,6 +46,8 @@ a {
 }
 
 .btn {
+  appearance: none;
+  -webkit-appearance: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -53,12 +55,15 @@ a {
   padding: 12px 28px;
   border: none;
   border-radius: var(--radius);
+  background-color: var(--accent);
   color: #fff;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   cursor: pointer;
   transition: var(--transition);
+  font-family: inherit;
+  font-size: 15px;
 }
 
 .btn:hover {
