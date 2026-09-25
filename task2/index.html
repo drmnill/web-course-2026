@@ -78,13 +78,45 @@
       </section>
 
       <section class="about" id="about">
+         <div class="about__media">
+          <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=800&q=80" alt="Зал PULSE GYM">
+        </div>
+        <div class="about__text">
+          <h2 class="section-title section-title--left">Почему PULSE GYM</h2>
+          <p>700 м² тренировочного пространства, современное оборудование и тренеры с сертификатами международного уровня.</p>
+          <p>Отдельная зона со свободными весами, кардио-зона с окнами во всю стену и бесплатная парковка для клиентов клуба.</p>
+        </div>
       </section>
 
       <section class="feedback" id="feedback">
+        <div class="feedback__box">
+          <h2 class="section-title">Записаться на пробное занятие</h2>
+
+          <form class="form" action="#">
+            <div class="form__field">
+              <label for="name">Имя *</label>
+              <input type="text" id="name" name="name" placeholder="Иван Иванов" required>
+            </div>
+            <div class="form__field">
+              <label for="email">Email *</label>
+              <input type="email" id="email" name="email" placeholder="you@example.com" required>
+            </div>
+            <div class="form__field">
+              <label for="message">Сообщение</label>
+              <textarea id="message" name="message" rows="4" placeholder="Ваша цель тренировок"></textarea>
+            </div>
+            <button type="submit" class="btn btn--submit">Отправить</button>
+          </form>
+        </div>
       </section>
     </main>
 
     <footer class="footer">
+      <p>&copy; 2026 PULSE GYM. Все права защищены.</p>
+      <div class="footer__contacts">
+        <a href="tel:+375291112233">+375 (44) 141-67-00</a>
+        <a href="mailto:hello@pulsegym.by">hello@pulsegym.by</a>
+      </div>
     </footer>
 
   </div>
