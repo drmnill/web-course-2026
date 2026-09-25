@@ -161,7 +161,143 @@ a {
   text-transform: uppercase;
   font-size: 14px;
 }
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+  padding: 70px 20px;
+  background: linear-gradient(rgba(12, 12, 15, 0.85), rgba(12, 12, 15, 0.95)),
+              url('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+}
 
+.hero__title {
+  font-size: 32px;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1.15;
+  max-width: 700px;
+}
+
+.hero__desc {
+  color: var(--text-muted);
+  max-width: 520px;
+}
+.plans {
+  padding: 50px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.plans__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  transition: var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+}
+
+.card--popular {
+  border-color: var(--accent);
+}
+
+.card__badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background-color: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.card__head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: center;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.card__title {
+  font-size: 18px;
+  text-transform: uppercase;
+}
+
+.card__price {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--accent);
+}
+
+.card__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-grow: 1;
+}
+
+.card__list li {
+  color: var(--text-muted);
+  padding-left: 22px;
+  position: relative;
+}
+
+.card__list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: bold;
+}
+.about {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto 50px;
+  padding: 40px 20px;
+  background-color: var(--surface);
+  border-radius: var(--radius);
+}
+
+.about__media img {
+  border-radius: var(--radius);
+  height: 260px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.about__text {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.about__text p {
+  color: var(--text-muted);
+}
 .nav__link:hover {
   color: var(--accent);
 }
