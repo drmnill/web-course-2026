@@ -12,14 +12,33 @@ function generateId() {
   return Date.now();
 }
 
-function getFilteredTasks() {
-  if (currentFilter === "active") {
-    return tasks.filter((task) => !task.completed);
-  }
-  if (currentFilter === "completed") {
-    return tasks.filter((task) => task.completed);
-  }
-  return tasks;
+function shouldShowTask(task) {
+  if (currentFilter === "active") return !task.completed;
+  if (currentFilter === "completed") return task.completed;
+  return true;
+}
+
+function applyFilter() {
+  const items = taskListEl.querySelectorAll(".task");
+  items.forEach((item) => {
+    const taskId = Number(item.dataset.id);
+    const task = tasks.find((t) => t.id === taskId);
+    if (!task) return;
+
+    item.classList.toggle("task--hidden", !shouldShowTask(task));
+  });
+}
+
+function render() {
+  taskListEl.innerHTML = "";
+
+  tasks.forEach((task) => {
+    const taskEl = createTaskElement(task);
+    taskListEl.appendChild(taskEl);
+  });
+
+  applyFilter();
+  updateCounter();
 }
 
 function updateCounter() {
@@ -53,18 +72,6 @@ function createTaskElement(task) {
   return li;
 }
 
-function render() {
-  taskListEl.innerHTML = "";
-
-  const visibleTasks = getFilteredTasks();
-
-  visibleTasks.forEach((task) => {
-    const taskEl = createTaskElement(task);
-    taskListEl.appendChild(taskEl);
-  });
-
-  updateCounter();
-}
 
 function addTask(text) {
   tasks.push({
@@ -119,7 +126,7 @@ filtersContainer.addEventListener("click", (event) => {
     .forEach((btn) => btn.classList.remove("filters__btn--active"));
   button.classList.add("filters__btn--active");
 
-  render();
+  applyFilter();
 });
 
 render();
