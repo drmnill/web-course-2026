@@ -37,6 +37,7 @@ function createTaskElement(task) {
   checkbox.type = "checkbox";
   checkbox.className = "task__checkbox";
   checkbox.checked = task.completed;
+  checkbox.addEventListener("change", () => toggleTask(task.id));
 
   const text = document.createElement("span");
   text.className = "task__text" + (task.completed ? " completed" : "");
@@ -46,6 +47,7 @@ function createTaskElement(task) {
   deleteBtn.type = "button";
   deleteBtn.className = "task__delete";
   deleteBtn.textContent = "✕";
+  deleteBtn.addEventListener("click", () => deleteTask(task.id));
 
   li.append(checkbox, text, deleteBtn);
   return li;
@@ -63,5 +65,47 @@ function render() {
 
   updateCounter();
 }
+
+function addTask(text) {
+  tasks.push({
+    id: generateId(),
+    text: text,
+    completed: false,
+  });
+  render();
+}
+
+function toggleTask(id) {
+  tasks = tasks.map((task) =>
+    task.id === id ? { ...task, completed: !task.completed } : task
+  );
+  render();
+}
+
+function deleteTask(id) {
+  tasks = tasks.filter((task) => task.id !== id);
+  render();
+}
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const text = input.value.trim();
+
+  if (text === "") {
+    warning.classList.add("task-form__warning--visible");
+    return;
+  }
+
+  warning.classList.remove("task-form__warning--visible");
+  addTask(text);
+  input.value = "";
+  input.focus();
+});
+
+input.addEventListener("input", () => {
+  if (input.value.trim() !== "") {
+    warning.classList.remove("task-form__warning--visible");
+  }
+});
 
 render();
