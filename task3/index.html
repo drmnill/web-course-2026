@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo-list</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main class="app">
+    <h1 class="app__title">Мои задачи</h1>
+
+    <form class="task-form" id="task-form">
+      <input type="text" class="task-form__input" id="task-input" placeholder="Что нужно сделать?" autocomplete="off">
+      <button type="submit" class="task-form__btn">Добавить</button>
+    </form>
+
+    <p class="task-form__warning" id="task-warning">Введите текст задачи</p>
+
+    <div class="filters" id="filters">
+      <button class="filters__btn filters__btn--active" data-filter="all">Все</button>
+      <button class="filters__btn" data-filter="active">Активные</button>
+      <button class="filters__btn" data-filter="completed">Завершённые</button>
+    </div>
+
+    <ul class="task-list" id="task-list"></ul>
+
+    <p class="counter" id="counter">Осталось: 0, Выполнено: 0</p>
+  </main>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
