@@ -108,4 +108,18 @@ input.addEventListener("input", () => {
   }
 });
 
+filtersContainer.addEventListener("click", (event) => {
+  const button = event.target.closest(".filters__btn");
+  if (!button) return;
+
+  currentFilter = button.dataset.filter;
+
+  document
+    .querySelectorAll(".filters__btn")
+    .forEach((btn) => btn.classList.remove("filters__btn--active"));
+  button.classList.add("filters__btn--active");
+
+  render();
+});
+
 render();
