@@ -17,7 +17,6 @@
         <a href="#about" class="nav__link">О зале</a>
         <a href="#feedback" class="nav__link">Контакты</a>
       </nav>
-
       <label class="burger" for="burger-toggle" aria-label="Открыть меню">
         <span></span>
         <span></span>
@@ -28,9 +27,54 @@
 
     <main class="main">
       <section class="hero" id="hero">
+        <h1 class="hero__title">СИЛА НАЧИНАЕТСЯ ЗДЕСЬ</h1>
+        <p class="hero__desc">Свободные веса, тренажёры нового поколения и тренеры, которые доведут тебя до цели.</p>
+        <a href="#plans" class="btn">Выбрать абонемент</a>
       </section>
 
       <section class="plans" id="plans">
+        <h2 class="section-title">Абонементы</h2>
+
+        <div class="plans__grid">
+          <article class="card">
+            <div class="card__head">
+              <h3 class="card__title">Разовое посещение</h3>
+              <p class="card__price">15 BYN</p>
+            </div>
+            <ul class="card__list">
+              <li>Доступ в зал на 1.5 часа</li>
+              <li>Шкафчик в раздевалке</li>
+            </ul>
+            <a href="#feedback" class="btn btn--outline">Записаться</a>
+          </article>
+
+          <article class="card card--popular">
+            <span class="card__badge">Выгодно</span>
+            <div class="card__head">
+              <h3 class="card__title">Месяц безлимит</h3>
+              <p class="card__price">89 BYN</p>
+            </div>
+            <ul class="card__list">
+              <li>Безлимитный доступ</li>
+              <li>Групповые тренировки</li>
+              <li>Зона кроссфита</li>
+            </ul>
+            <a href="#feedback" class="btn">Записаться</a>
+          </article>
+
+          <article class="card">
+            <div class="card__head">
+              <h3 class="card__title">Год + тренер</h3>
+              <p class="card__price">690 BYN</p>
+            </div>
+            <ul class="card__list">
+              <li>Всё из безлимита</li>
+              <li>4 персональные тренировки</li>
+              <li>План питания</li>
+            </ul>
+            <a href="#feedback" class="btn btn--outline">Записаться</a>
+          </article>
+        </div>
       </section>
 
       <section class="about" id="about">
