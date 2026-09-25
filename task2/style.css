@@ -356,6 +356,10 @@ a {
   transition: var(--transition);
 }
 
+.form__field textarea {
+  resize: none;
+}
+
 .form__field input:hover,
 .form__field textarea:hover {
   border-color: var(--text-muted);
@@ -370,6 +374,8 @@ a {
 
 .btn--submit {
   width: 100%;
+  background-color: var(--accent);
+  color: #fff;
 }
 .footer {
   display: flex;
