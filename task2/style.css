@@ -216,19 +216,6 @@ a {
   border-color: var(--accent);
 }
 
-.card__badge {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background-color: var(--accent);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
-  padding: 4px 10px;
-  border-radius: 999px;
-}
-
 .card__head {
   display: flex;
   flex-direction: column;
@@ -236,6 +223,25 @@ a {
   text-align: center;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--border);
+}
+
+.card__head-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.card__badge {
+  display: inline-block;
+  background-color: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
 }
 
 .card__title {
