@@ -108,3 +108,26 @@ function render() {
 
   attemptsCountEl.textContent = attempts.length;
 }
+function startNewGame() {
+  secretNumber = generateSecretNumber();
+  attempts = [];
+  isGameOver = false;
+
+  input.value = "";
+  input.disabled = false;
+  submitBtn.disabled = false;
+  errorMsg.classList.remove("guess-form__error--visible");
+  statusEl.textContent = "";
+  statusEl.classList.remove("vault__status--win");
+
+  render();
+  input.focus();
+}
+
+function endGame(attemptsMade) {
+  isGameOver = true;
+  input.disabled = true;
+  submitBtn.disabled = true;
+  statusEl.textContent = `Победа! Угадано за ${attemptsMade} попыток.`;
+  statusEl.classList.add("vault__status--win");
+}
