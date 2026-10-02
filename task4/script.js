@@ -131,3 +131,38 @@ function endGame(attemptsMade) {
   statusEl.textContent = `Победа! Угадано за ${attemptsMade} попыток.`;
   statusEl.classList.add("vault__status--win");
 }
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  if (isGameOver) return;
+
+  const guess = input.value.trim();
+  const validation = validateInput(guess);
+
+  if (!validation.valid) {
+    errorMsg.textContent = validation.message;
+    errorMsg.classList.add("guess-form__error--visible");
+    return;
+  }
+
+  errorMsg.classList.remove("guess-form__error--visible");
+
+  const { bulls, cows } = countBullsAndCows(secretNumber, guess);
+  attempts.push({ guess, bulls, cows });
+  render();
+
+  input.value = "";
+  input.focus();
+
+  if (bulls === 4) {
+    endGame(attempts.length);
+  }
+});
+
+input.addEventListener("input", () => {
+  errorMsg.classList.remove("guess-form__error--visible");
+});
+
+newGameBtn.addEventListener("click", startNewGame);
+
+startNewGame();
