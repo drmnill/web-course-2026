@@ -21,3 +21,19 @@ function generateSecretNumber() {
 
   return digits.slice(0, 4).join("");
 }
+function validateInput(value) {
+  if (value.length !== 4) {
+    return { valid: false, message: "Нужно ввести ровно 4 цифры." };
+  }
+
+  if (!/^[0-9]{4}$/.test(value)) {
+    return { valid: false, message: "Можно вводить только цифры." };
+  }
+
+  const uniqueDigits = new Set(value.split(""));
+  if (uniqueDigits.size !== 4) {
+    return { valid: false, message: "Цифры не должны повторяться." };
+  }
+
+  return { valid: true, message: "" };
+}
