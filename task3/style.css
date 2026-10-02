@@ -5,36 +5,31 @@
 }
 
 body {
-  font-family: "Comic Sans MS", "Segoe UI", Tahoma, sans-serif;
-  color: #3a2f28;
+  font-family: "Segoe UI", Tahoma, Verdana, sans-serif;
+  color: #e8e8ec;
+  background-color: #1b1d23;
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(91, 141, 239, 0.35), transparent 45%),
+    radial-gradient(circle at 85% 15%, rgba(226, 92, 138, 0.3), transparent 50%),
+    radial-gradient(circle at 50% 90%, rgba(46, 196, 182, 0.3), transparent 55%),
+    linear-gradient(160deg, #15171d 0%, #1b1d23 50%, #20151f 100%);
+  background-attachment: fixed;
   display: flex;
   justify-content: center;
   padding: 40px 16px;
   min-height: 100vh;
-  background-image:
-    linear-gradient(rgba(60, 40, 20, 0.35), rgba(60, 40, 20, 0.35)),
-    url('https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1400&q=80');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
 }
 
 .app {
   width: 100%;
   max-width: 480px;
-  background-color: #fff8e7;
-  border-radius: 6px;
-  padding: 32px 24px 28px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
-  transform: rotate(-0.6deg);
 }
 
 .app__title {
   text-align: center;
   margin-bottom: 24px;
-  font-size: 30px;
-  color: #d6336c;
-  text-shadow: 2px 2px 0 #ffe066;
+  font-size: 24px;
+  font-weight: 600;
 }
 
 /* форма добавления задачи */
@@ -47,50 +42,47 @@ body {
 
 .task-form__input {
   flex: 1;
-  min-height: 46px;
+  min-height: 44px;
   padding: 10px 14px;
-  border-radius: 10px;
-  border: 2px dashed #ffb703;
-  background-color: #fffdf5;
-  color: #3a2f28;
+  border-radius: 8px;
+  border: 1px solid #3a3d47;
+  background-color: #24262e;
+  color: #e8e8ec;
   font-size: 16px;
   font-family: inherit;
 }
 
 .task-form__input::placeholder {
-  color: #b5a99a;
+  color: #74778a;
 }
 
 .task-form__input:focus {
   outline: none;
-  border-color: #d6336c;
-  border-style: solid;
+  border-color: #5b8def;
 }
 
 .task-form__btn {
-  min-height: 46px;
-  padding: 10px 20px;
+  min-height: 44px;
+  padding: 10px 18px;
   border: none;
-  border-radius: 10px;
-  background-color: #2ec4b6;
+  border-radius: 8px;
+  background-color: #5b8def;
   color: #fff;
-  font-weight: 700;
+  font-weight: 600;
   font-family: inherit;
   cursor: pointer;
-  transition: transform 0.15s ease, background-color 0.15s ease;
+  transition: background-color 0.2s ease;
   appearance: none;
   -webkit-appearance: none;
 }
 
 .task-form__btn:hover {
-  background-color: #21a99c;
-  transform: translateY(-2px) rotate(-2deg);
+  background-color: #4674d6;
 }
 
 .task-form__warning {
   display: none;
-  color: #e5383b;
-  font-weight: 600;
+  color: #f06a6a;
   font-size: 14px;
   margin-bottom: 16px;
 }
@@ -99,91 +91,76 @@ body {
   display: block;
 }
 
-/* фильтры — как вкладки-закладки */
+/* фильтры */
 
 .filters {
   display: flex;
   gap: 8px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
+  margin-bottom: 16px;
 }
 
 .filters__btn {
-  padding: 7px 16px;
-  border-radius: 999px;
-  border: 2px solid #ffb703;
-  background-color: #fffdf5;
-  color: #8a6d3b;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid #3a3d47;
+  background-color: transparent;
+  color: #9a9cab;
   cursor: pointer;
   font-size: 14px;
-  font-weight: 700;
   font-family: inherit;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .filters__btn:hover {
-  transform: translateY(-2px);
+  border-color: #5b8def;
+  color: #e8e8ec;
 }
 
 .filters__btn--active {
-  background-color: #ffb703;
-  border-color: #ffb703;
-  color: #3a2f28;
+  background-color: #5b8def;
+  border-color: #5b8def;
+  color: #fff;
 }
 
-/* список задач — разноцветные стикеры */
+/* список задач — у каждой свой цветовой акцент слева */
 
 .task-list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  margin-bottom: 20px;
+  gap: 10px;
+  margin-bottom: 16px;
 }
 
 .task {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 16px;
-  border-radius: 4px;
-  box-shadow: 3px 4px 10px rgba(0, 0, 0, 0.18);
-  transform: rotate(-1deg);
+  padding: 12px 14px;
+  background-color: #24262e;
+  border: 1px solid #3a3d47;
+  border-left: 4px solid #5b8def;
+  border-radius: 6px;
 }
 
-.task:nth-child(4n+1) {
-  background-color: #ffe066;
-  transform: rotate(-1.5deg);
-}
-
-.task:nth-child(4n+2) {
-  background-color: #a7f3d0;
-  transform: rotate(1deg);
-}
-
-.task:nth-child(4n+3) {
-  background-color: #bde0fe;
-  transform: rotate(-0.5deg);
-}
-
-.task:nth-child(4n+4) {
-  background-color: #ffc8dd;
-  transform: rotate(1.5deg);
-}
+.task:nth-child(6n+1) { border-left-color: #5b8def; }
+.task:nth-child(6n+2) { border-left-color: #2ec4b6; }
+.task:nth-child(6n+3) { border-left-color: #f0a830; }
+.task:nth-child(6n+4) { border-left-color: #e25c8a; }
+.task:nth-child(6n+5) { border-left-color: #8e6ce0; }
+.task:nth-child(6n+6) { border-left-color: #5fbf6a; }
 
 .task__checkbox {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
   cursor: pointer;
-  accent-color: #d6336c;
+  accent-color: #5b8def;
 }
 
 .task__text {
   flex: 1;
   word-break: break-word;
-  color: #3a2f28;
-  font-weight: 600;
 }
 
 .task__text.completed {
@@ -195,18 +172,16 @@ body {
   min-width: 30px;
   min-height: 30px;
   border: none;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.6);
-  color: #e5383b;
+  border-radius: 6px;
+  background-color: transparent;
+  color: #f06a6a;
   font-size: 16px;
-  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.15s ease, transform 0.15s ease;
+  transition: background-color 0.2s ease;
 }
 
 .task__delete:hover {
-  background-color: #fff;
-  transform: scale(1.1) rotate(10deg);
+  background-color: rgba(240, 106, 106, 0.15);
 }
 
 .task--hidden {
@@ -217,7 +192,6 @@ body {
 
 .counter {
   text-align: center;
-  color: #8a6d3b;
-  font-weight: 700;
+  color: #9a9cab;
   font-size: 14px;
 }
