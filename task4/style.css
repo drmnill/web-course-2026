@@ -241,3 +241,22 @@ body {
   background-color: transparent;
   border: 1.5px solid #ffd93d;
 }
+.new-game-btn {
+  width: 100%;
+  min-height: 46px;
+  border: 1px dashed #6fa98a;
+  border-radius: 6px;
+  background-color: transparent;
+  color: #a9d9bd;
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.new-game-btn:hover {
+  border-style: solid;
+  border-color: #39ff88;
+  color: #39ff88;
+}
