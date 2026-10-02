@@ -37,3 +37,20 @@ function validateInput(value) {
 
   return { valid: true, message: "" };
 }
+function countBullsAndCows(secret, guess) {
+  let bulls = 0;
+  let cows = 0;
+
+  const secretDigits = secret.split("");
+  const guessDigits = guess.split("");
+
+  guessDigits.forEach((digit, index) => {
+    if (digit === secretDigits[index]) {
+      bulls++;
+    } else if (secretDigits.includes(digit)) {
+      cows++;
+    }
+  });
+
+  return { bulls, cows };
+}
