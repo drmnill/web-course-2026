@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Взломщик кода — Быки и коровы</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main class="vault">
+    <div class="vault__scanlines"></div>
+
+    <h1 class="vault__title">ВЗЛОМЩИК КОДА</h1>
+    <p class="vault__subtitle">Подбери секретный 4-значный код. Цифры не повторяются.</p>
+
+    <div class="vault__status" id="status"></div>
+
+    <form class="guess-form" id="guess-form">
+      <input type="text" class="guess-form__input" id="guess-input" placeholder="? ? ? ?" maxlength="4" inputmode="numeric" autocomplete="off">
+      <button type="submit" class="guess-form__btn" id="submit-btn">Проверить</button>
+    </form>
+
+    <p class="guess-form__error" id="error-msg"></p>
+
+    <div class="legend">
+      <span class="legend__item"><span class="legend__dot legend__dot--bull"></span>бык — цифра на своём месте</span>
+      <span class="legend__item"><span class="legend__dot legend__dot--cow"></span>корова — цифра есть, но не там</span>
+    </div>
+
+    <div class="history-head">
+      <span>Попытки: <strong id="attempts-count">0</strong></span>
+    </div>
+
+    <ul class="history" id="history"></ul>
+
+    <button type="button" class="new-game-btn" id="new-game-btn">Новая игра</button>
+  </main>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
