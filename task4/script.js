@@ -54,3 +54,57 @@ function countBullsAndCows(secret, guess) {
 
   return { bulls, cows };
 }
+function createHistoryItem(attempt) {
+  const li = document.createElement("li");
+  li.className = "history__item";
+
+  const code = document.createElement("span");
+  code.className = "history__code";
+  code.textContent = attempt.guess;
+
+  const result = document.createElement("div");
+  result.className = "history__result";
+
+  const dotsWrap = document.createElement("div");
+  dotsWrap.className = "history__dots";
+
+  for (let i = 0; i < attempt.bulls; i++) {
+    const dot = document.createElement("span");
+    dot.className = "history__dot history__dot--bull";
+    dotsWrap.appendChild(dot);
+  }
+  for (let i = 0; i < attempt.cows; i++) {
+    const dot = document.createElement("span");
+    dot.className = "history__dot history__dot--cow";
+    dotsWrap.appendChild(dot);
+  }
+
+  const text = document.createElement("span");
+  text.textContent = `${attempt.bulls} ${declineBulls(attempt.bulls)}, ${attempt.cows} ${declineCows(attempt.cows)}`;
+
+  result.append(dotsWrap, text);
+  li.append(code, result);
+  return li;
+}
+
+function declineBulls(n) {
+  if (n === 1) return "бык";
+  if (n >= 2 && n <= 4) return "быка";
+  return "быков";
+}
+
+function declineCows(n) {
+  if (n === 1) return "корова";
+  if (n >= 2 && n <= 4) return "коровы";
+  return "коров";
+}
+
+function render() {
+  historyEl.innerHTML = "";
+
+  attempts.forEach((attempt) => {
+    historyEl.appendChild(createHistoryItem(attempt));
+  });
+
+  attemptsCountEl.textContent = attempts.length;
+}
