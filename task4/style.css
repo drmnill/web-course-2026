@@ -69,3 +69,75 @@ body {
   color: #39ff88;
   text-shadow: 0 0 10px rgba(57, 255, 136, 0.7);
 }
+.guess-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.guess-form__input {
+  flex: 1;
+  min-height: 48px;
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: 1px solid #1f3d2c;
+  background-color: #060a08;
+  color: #39ff88;
+  font-family: inherit;
+  font-size: 22px;
+  letter-spacing: 10px;
+  text-align: center;
+}
+
+.guess-form__input::placeholder {
+  color: #2b4a3a;
+  letter-spacing: 10px;
+}
+
+.guess-form__input:focus {
+  outline: none;
+  border-color: #39ff88;
+  box-shadow: 0 0 12px rgba(57, 255, 136, 0.35);
+}
+
+.guess-form__input:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.guess-form__btn {
+  min-height: 48px;
+  padding: 0 20px;
+  border: 1px solid #39ff88;
+  border-radius: 6px;
+  background-color: transparent;
+  color: #39ff88;
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.guess-form__btn:hover:not(:disabled) {
+  background-color: #39ff88;
+  color: #060a08;
+  box-shadow: 0 0 16px rgba(57, 255, 136, 0.5);
+}
+
+.guess-form__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.guess-form__error {
+  display: none;
+  color: #ff5d5d;
+  font-size: 13px;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.guess-form__error--visible {
+  display: block;
+}
