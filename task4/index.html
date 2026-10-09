@@ -3,21 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Взломщик кода — Быки и коровы</title>
+  <title>Быки и коровы</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <main class="vault">
-    <div class="vault__scanlines"></div>
+    <div class="vault__spots"></div>
 
-    <h1 class="vault__title">БЫКИ И КОРОВЫ</h1>
-    <p class="vault__subtitle">Подбери секретный 4-значный код. Цифры не повторяются.</p>
+    <h1 class="vault__title">Быки и коровы</h1>
+    <p class="vault__subtitle">Угадай загаданное число из 4 разных цифр.</p>
 
     <div class="vault__status" id="status"></div>
 
     <form class="guess-form" id="guess-form">
-      <input type="text" class="guess-form__input" id="guess-input" placeholder="? ? ? ?" maxlength="4" inputmode="numeric" autocomplete="off">
+      <input
+        type="text"
+        class="guess-form__input"
+        id="guess-input"
+        placeholder="? ? ? ?"
+        maxlength="4"
+        inputmode="numeric"
+        autocomplete="off"
+      >
       <button type="submit" class="guess-form__btn" id="submit-btn">Проверить</button>
     </form>
 
