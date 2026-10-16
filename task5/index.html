@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simon — игра на память</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main class="app">
+    <header class="app__head">
+      <h1 class="app__title">Simon</h1>
+      <p class="app__lead">Запомни порядок вспышек и повтори его.</p>
+    </header>
+
+    <section class="game">
+      <div class="board" id="board">
+        <button type="button" class="pad pad--0" data-index="0" aria-label="Бирюзовый сектор" disabled></button>
+        <button type="button" class="pad pad--1" data-index="1" aria-label="Жёлтый сектор" disabled></button>
+        <button type="button" class="pad pad--2" data-index="2" aria-label="Коралловый сектор" disabled></button>
+        <button type="button" class="pad pad--3" data-index="3" aria-label="Синий сектор" disabled></button>
+
+        <div class="board__hub">
+          <span class="board__hub-label">Уровень</span>
+          <strong class="board__hub-level" id="level">0</strong>
+        </div>
+      </div>
+
+      <p class="message" id="message" role="status" aria-live="polite">Нажми «Старт», чтобы начать.</p>
+
+      <div class="controls">
+        <button type="button" class="btn btn--primary" id="start-btn">Старт</button>
+        <button type="button" class="btn btn--ghost" id="sound-btn" aria-pressed="true">Звук: вкл</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
