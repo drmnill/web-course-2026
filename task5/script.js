@@ -64,6 +64,29 @@ function unlockInput() {
 }
 // sound
 
+function delay(ms) {
+  return new Promise((resolve) => {
+    const entry = { resolve };
+    entry.id = setTimeout(() => {
+      pendingTimers.delete(entry);
+      resolve();
+    }, ms);
+    pendingTimers.add(entry);
+  });
+}
+
+function cancelAllTimers() {
+  pendingTimers.forEach((entry) => {
+    clearTimeout(entry.id);
+    entry.resolve(); // будим ждущую функцию, дальше она сама увидит isStale()
+  });
+  pendingTimers.clear();
+}
+
+function isStale(runId) {
+  return runId !== state.runId;
+}
+
 function getAudioContext() {
   if (!state.soundOn) return null;
   try {
