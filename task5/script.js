@@ -108,3 +108,29 @@ function playPadSound(index) {
 function playFailSound() {
   playTone(110, 0.6, "sawtooth");
 }
+// show subsequence
+
+async function lightPad(index, duration) {
+  pads[index].classList.add("active");
+  playPadSound(index);
+  await delay(duration);
+  pads[index].classList.remove("active");
+}
+
+async function playSequence(runId) {
+  lockInput();
+  setMessage("Смотри внимательно…");
+  await delay(SHOW_START_DELAY_MS);
+
+  for (const index of state.sequence) {
+    if (isStale(runId)) return;
+    await lightPad(index, LIGHT_MS);
+    if (isStale(runId)) return;
+    await delay(GAP_MS);
+  }
+
+  if (isStale(runId)) return;
+  state.playerInput = [];
+  unlockInput();
+  setMessage("Твой ход!");
+}
