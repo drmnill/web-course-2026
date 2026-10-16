@@ -180,3 +180,53 @@ function handlePadPress(index) {
     finishRound(state.runId);
   }
 }
+// start and end of the game
+
+function startGame() {
+  getAudioContext(); // создаём звук по клику пользователя, иначе браузер его заблокирует
+  cancelAllTimers();
+  clearLitPads();
+
+  state.runId++;
+  state.sequence = [];
+  state.playerInput = [];
+  state.isRunning = true;
+
+  updateLevel();
+  startBtn.textContent = "Заново";
+  nextRound();
+}
+
+function gameOver() {
+  state.runId++; // всё, что ещё ждёт на таймерах, станет «устаревшим»
+  state.isRunning = false;
+  state.isShowing = false;
+  setPadsDisabled(true);
+
+  playFailSound();
+  setMessage(`Вы дошли до уровня ${state.sequence.length}. Нажми «Играть снова».`, "error");
+  startBtn.textContent = "Играть снова";
+}
+
+// обработчик событий
+
+startBtn.addEventListener("click", startGame);
+
+board.addEventListener("click", (event) => {
+  const pad = event.target.closest(".pad");
+  if (!pad) return;
+  handlePadPress(Number(pad.dataset.index));
+});
+
+soundBtn.addEventListener("click", () => {
+  state.soundOn = !state.soundOn;
+  soundBtn.textContent = state.soundOn ? "Звук: вкл" : "Звук: выкл";
+  soundBtn.setAttribute("aria-pressed", String(state.soundOn));
+});
+
+window.addEventListener("pagehide", cancelAllTimers);
+
+// нач. состояние
+
+setPadsDisabled(true);
+updateLevel();
