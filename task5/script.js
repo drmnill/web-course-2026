@@ -62,3 +62,49 @@ function unlockInput() {
   state.isShowing = false;
   setPadsDisabled(false);
 }
+// sound
+
+function getAudioContext() {
+  if (!state.soundOn) return null;
+  try {
+    if (!audioCtx) {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return null;
+      audioCtx = new Ctx();
+    }
+    if (audioCtx.state === "suspended") {
+      audioCtx.resume();
+    }
+    return audioCtx;
+  } catch (error) {
+    return null;
+  }
+}
+
+function playTone(frequency, duration = 0.35, type = "sine") {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  const now = ctx.currentTime;
+
+  osc.type = type;
+  osc.frequency.value = frequency;
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.18, now + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(now);
+  osc.stop(now + duration + 0.05);
+}
+
+function playPadSound(index) {
+  playTone(TONES[index]);
+}
+
+function playFailSound() {
+  playTone(110, 0.6, "sawtooth");
+}
