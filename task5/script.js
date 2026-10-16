@@ -134,3 +134,49 @@ async function playSequence(runId) {
   unlockInput();
   setMessage("Твой ход!");
 }
+// round and enter the player
+
+function randomPad() {
+  return Math.floor(Math.random() * PAD_COUNT);
+}
+
+function nextRound() {
+  state.sequence.push(randomPad());
+  state.playerInput = [];
+  updateLevel();
+  playSequence(state.runId);
+}
+
+async function flashPad(index, withSound = true) {
+  pads[index].classList.add("active");
+  if (withSound) playPadSound(index);
+  await delay(CLICK_FLASH_MS);
+  pads[index].classList.remove("active");
+}
+
+async function finishRound(runId) {
+  lockInput();
+  setMessage("Верно!", "ok");
+  await delay(NEXT_ROUND_DELAY_MS);
+  if (isStale(runId)) return;
+  nextRound();
+}
+
+function handlePadPress(index) {
+  if (!state.isRunning || state.isShowing) return; // во время показа клики не считаются
+
+  state.playerInput.push(index);
+  const position = state.playerInput.length - 1;
+
+  if (state.playerInput[position] !== state.sequence[position]) {
+    flashPad(index, false);
+    gameOver();
+    return;
+  }
+
+  flashPad(index);
+
+  if (state.playerInput.length === state.sequence.length) {
+    finishRound(state.runId);
+  }
+}
