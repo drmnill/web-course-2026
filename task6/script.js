@@ -327,3 +327,57 @@ function draw() {
     drawGameOver();
   }
 }
+// ===== Игровой цикл =====
+
+function gameLoop(timestamp) {
+  if (lastMoveTime === null) {
+    lastMoveTime = timestamp;
+  }
+
+  const elapsed = timestamp - lastMoveTime;
+
+  // шаг по времени, а не по кадрам: на 60, 144 или 30 FPS скорость одинаковая
+  if (elapsed >= MOVE_INTERVAL_MS) {
+    update();
+    lastMoveTime = timestamp - (elapsed % MOVE_INTERVAL_MS);
+  }
+
+  draw();
+
+  if (state.gameOver) {
+    rafId = null; // после последнего кадра цикл останавливается
+    return;
+  }
+
+  rafId = requestAnimationFrame(gameLoop);
+}
+
+function startGame() {
+  if (rafId !== null) {
+    cancelAnimationFrame(rafId); // на случай перезапуска посреди игры
+  }
+
+  state = createInitialState();
+  spawnApple();
+  lastMoveTime = null;
+
+  restartBtn.hidden = true;
+  hintEl.hidden = false;
+  updateScoreDisplay();
+
+  rafId = requestAnimationFrame(gameLoop);
+}
+
+// ===== Обработчики событий =====
+
+document.addEventListener("keydown", handleKeydown);
+restartBtn.addEventListener("click", startGame);
+
+window.addEventListener("pagehide", () => {
+  if (rafId !== null) cancelAnimationFrame(rafId);
+});
+
+// ===== Запуск =====
+
+setupCanvas();
+startGame();
