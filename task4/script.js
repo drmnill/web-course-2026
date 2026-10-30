@@ -132,30 +132,30 @@ function endGame(attemptsMade) {
   statusEl.classList.add("vault__status--win");
 }
 form.addEventListener("submit", (event) => {
-  event.preventDefault();
+  event.preventDefault(); // 1. Отменяем перезагрузку страницы
 
-  if (isGameOver) return;
+  if (isGameOver) return; // 2. Если игра окончена, ничего не делаем
 
-  const guess = input.value.trim();
-  const validation = validateInput(guess);
+  const guess = input.value.trim(); // 3. Убираем лишние пробелы
+  const validation = validateInput(guess); // 4. Проверяем валидность
 
   if (!validation.valid) {
     errorMsg.textContent = validation.message;
     errorMsg.classList.add("guess-form__error--visible");
-    return;
+    return; // Прерываем выполнение, если ввод некорректный
   }
 
-  errorMsg.classList.remove("guess-form__error--visible");
+  errorMsg.classList.remove("guess-form__error--visible"); // Скрываем прошлую ошибку
 
-  const { bulls, cows } = countBullsAndCows(secretNumber, guess);
-  attempts.push({ guess, bulls, cows });
-  render();
+  const { bulls, cows } = countBullsAndCows(secretNumber, guess); // Считаем результат
+  attempts.push({ guess, bulls, cows }); // Добавляем попытку в массив
+  render() // Перерисовываем историю
 
-  input.value = "";
-  input.focus();
+  input.value = ""; // Очищаем поле ввода
+  input.focus(); // Возвращаем фокус
 
   if (bulls === 4) {
-    endGame(attempts.length);
+    endGame(attempts.length); // Если угадал все 4 цифры — победа!
   }
 });
 
