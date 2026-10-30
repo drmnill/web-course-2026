@@ -70,3 +70,34 @@ function setupCanvas() {
   canvas.height = CANVAS_SIZE * ratio;
   ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
 }
+// ===== Яблоко =====
+
+function getFreeCells() {
+  const occupied = new Set(state.snake.map((segment) => `${segment.x},${segment.y}`));
+  const free = [];
+
+  for (let y = 0; y < GRID_SIZE; y++) {
+    for (let x = 0; x < GRID_SIZE; x++) {
+      if (!occupied.has(`${x},${y}`)) {
+        free.push({ x, y });
+      }
+    }
+  }
+  return free;
+}
+
+function spawnApple() {
+  const freeCells = getFreeCells();
+
+  if (freeCells.length === 0) {
+    state.apple = null; // змейка заняла всё поле
+    return false;
+  }
+
+  state.apple = freeCells[Math.floor(Math.random() * freeCells.length)];
+  return true;
+}
+
+function isAppleAt(cell) {
+  return state.apple !== null && state.apple.x === cell.x && state.apple.y === cell.y;
+}
