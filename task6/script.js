@@ -101,3 +101,40 @@ function spawnApple() {
 function isAppleAt(cell) {
   return state.apple !== null && state.apple.x === cell.x && state.apple.y === cell.y;
 }
+// ===== Управление =====
+
+function isSameDirection(a, b) {
+  return a.x === b.x && a.y === b.y;
+}
+
+function isOppositeDirection(a, b) {
+  return a.x === -b.x && a.y === -b.y;
+}
+
+function queueDirection(next) {
+  if (state.gameOver) return;
+  if (state.inputQueue.length >= MAX_QUEUED_TURNS) return;
+
+  // сравниваем с последним поворотом в очереди, а если очереди нет — с текущим направлением
+  const last = state.inputQueue.length > 0
+    ? state.inputQueue[state.inputQueue.length - 1]
+    : state.direction;
+
+  // разворот на 180° и повтор того же направления просто игнорируем
+  if (isSameDirection(next, last) || isOppositeDirection(next, last)) return;
+
+  state.inputQueue.push(next);
+}
+
+function handleKeydown(event) {
+  if (state.gameOver && event.key === "Enter") {
+    startGame();
+    return;
+  }
+
+  const direction = DIRECTIONS[event.key];
+  if (!direction) return;
+
+  event.preventDefault(); // чтобы стрелки не прокручивали страницу
+  queueDirection(direction);
+}
