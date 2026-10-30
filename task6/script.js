@@ -204,3 +204,126 @@ function update() {
     }
   }
 }
+// ===== Отрисовка (только рисует по текущему state) =====
+
+function fillRoundedRect(x, y, width, height, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.arcTo(x + width, y, x + width, y + height, radius);
+  ctx.arcTo(x + width, y + height, x, y + height, radius);
+  ctx.arcTo(x, y + height, x, y, radius);
+  ctx.arcTo(x, y, x + width, y, radius);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function mixColor(from, to, t) {
+  const channel = (i) => Math.round(from[i] + (to[i] - from[i]) * t);
+  return `rgb(${channel(0)}, ${channel(1)}, ${channel(2)})`;
+}
+
+function drawBoard() {
+  for (let y = 0; y < GRID_SIZE; y++) {
+    for (let x = 0; x < GRID_SIZE; x++) {
+      ctx.fillStyle = (x + y) % 2 === 0 ? COLORS.cellLight : COLORS.cellDark;
+      ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+    }
+  }
+}
+
+function drawApple() {
+  if (!state.apple) return;
+
+  const cx = state.apple.x * CELL_SIZE + CELL_SIZE / 2;
+  const cy = state.apple.y * CELL_SIZE + CELL_SIZE / 2;
+
+  ctx.fillStyle = COLORS.apple;
+  ctx.beginPath();
+  ctx.arc(cx, cy + 1, CELL_SIZE * 0.38, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = "rgba(255, 255, 255, 0.35)"; // блик
+  ctx.beginPath();
+  ctx.arc(cx - 3, cy - 2, 2.2, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = COLORS.leaf; // листик
+  ctx.beginPath();
+  ctx.ellipse(cx + 3, cy - CELL_SIZE * 0.34, 3.5, 2, -0.5, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawEyes() {
+  const head = state.snake[0];
+  const dir = state.direction;
+  const cx = head.x * CELL_SIZE + CELL_SIZE / 2;
+  const cy = head.y * CELL_SIZE + CELL_SIZE / 2;
+
+  // глаза смещены вперёд по ходу движения и в стороны
+  const eyes = [
+    { x: cx + dir.x * 3 - dir.y * 4, y: cy + dir.y * 3 + dir.x * 4 },
+    { x: cx + dir.x * 3 + dir.y * 4, y: cy + dir.y * 3 - dir.x * 4 },
+  ];
+
+  eyes.forEach((eye) => {
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.arc(eye.x, eye.y, 2.4, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "#101614";
+    ctx.beginPath();
+    ctx.arc(eye.x + dir.x, eye.y + dir.y, 1.2, 0, Math.PI * 2);
+    ctx.fill();
+  });
+}
+
+function drawSnake() {
+  const lastIndex = state.snake.length - 1;
+
+  state.snake.forEach((segment, index) => {
+    const t = lastIndex === 0 ? 0 : index / lastIndex; // 0 у головы, 1 у хвоста
+    ctx.fillStyle = mixColor(COLORS.snakeHead, COLORS.snakeTail, t);
+    fillRoundedRect(
+      segment.x * CELL_SIZE + 1,
+      segment.y * CELL_SIZE + 1,
+      CELL_SIZE - 2,
+      CELL_SIZE - 2,
+      6
+    );
+  });
+
+  drawEyes();
+}
+
+function drawGameOver() {
+  ctx.fillStyle = COLORS.overlay;
+  ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  ctx.fillStyle = COLORS.text;
+  ctx.font = "600 32px 'Segoe UI', system-ui, sans-serif";
+  ctx.fillText("Игра окончена", CANVAS_SIZE / 2, CANVAS_SIZE / 2 - 28);
+
+  ctx.fillStyle = COLORS.leaf;
+  ctx.font = "500 22px 'Segoe UI', system-ui, sans-serif";
+  ctx.fillText(`Итоговый счёт: ${state.score}`, CANVAS_SIZE / 2, CANVAS_SIZE / 2 + 14);
+
+  ctx.fillStyle = COLORS.muted;
+  ctx.font = "400 15px 'Segoe UI', system-ui, sans-serif";
+  const note = state.won ? "Ты заполнил всё поле!" : "Enter — начать заново";
+  ctx.fillText(note, CANVAS_SIZE / 2, CANVAS_SIZE / 2 + 54);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+  drawBoard();
+  drawApple();
+  drawSnake();
+
+  if (state.gameOver) {
+    drawGameOver();
+  }
+}
