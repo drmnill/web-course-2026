@@ -1,0 +1,89 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+:root {
+  --bg: #0b100e;
+  --surface: #121a16;
+  --border: #23322a;
+  --text: #e4ece7;
+  --muted: #86978d;
+  --accent: #7ee0a0;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, Tahoma, sans-serif;
+  color: var(--text);
+  background-color: var(--bg);
+  /* мягкие пятна по углам: зелёное сверху слева, коралловое снизу справа */
+  background-image:
+    radial-gradient(circle 55vmax at 0% 0%, rgba(126, 224, 160, 0.13), transparent 70%),
+    radial-gradient(circle 55vmax at 100% 100%, rgba(255, 122, 107, 0.10), transparent 70%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  line-height: 1.5;
+}
+
+.app {
+  width: 100%;
+  max-width: 452px;
+}
+
+/* ===== Карточка игры ===== */
+
+.game {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.game__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.game__title {
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: 3px;
+}
+
+.score {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 6px 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background-color: var(--bg);
+}
+
+.score__label {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.score__value {
+  min-width: 2ch;
+  text-align: right;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
