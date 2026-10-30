@@ -138,3 +138,69 @@ function handleKeydown(event) {
   event.preventDefault(); // чтобы стрелки не прокручивали страницу
   queueDirection(direction);
 }
+// ===== Логика игры =====
+
+function applyQueuedDirection() {
+  if (state.inputQueue.length > 0) {
+    state.direction = state.inputQueue.shift();
+  }
+}
+
+function getNextHead() {
+  const head = state.snake[0];
+  return {
+    x: head.x + state.direction.x,
+    y: head.y + state.direction.y,
+  };
+}
+
+function checkCollision(head, willGrow) {
+  const hitsWall =
+    head.x < 0 || head.x >= GRID_SIZE || head.y < 0 || head.y >= GRID_SIZE;
+  if (hitsWall) return true;
+
+  // если змейка не растёт, её хвост в этот шаг уйдёт — в его клетку заходить можно
+  const body = willGrow ? state.snake : state.snake.slice(0, -1);
+  return body.some((segment) => segment.x === head.x && segment.y === head.y);
+}
+
+function moveSnake(head, grow) {
+  state.snake.unshift(head);
+  if (!grow) {
+    state.snake.pop();
+  }
+}
+
+function updateScoreDisplay() {
+  scoreEl.textContent = state.score;
+}
+
+function endGame(won) {
+  state.gameOver = true;
+  state.won = won;
+  restartBtn.hidden = false;
+  hintEl.hidden = true;
+}
+
+function update() {
+  applyQueuedDirection();
+
+  const head = getNextHead();
+  const willGrow = isAppleAt(head);
+
+  if (checkCollision(head, willGrow)) {
+    endGame(false);
+    return;
+  }
+
+  moveSnake(head, willGrow);
+
+  if (willGrow) {
+    state.score += 1;
+    updateScoreDisplay();
+
+    if (!spawnApple()) {
+      endGame(true);
+    }
+  }
+}
