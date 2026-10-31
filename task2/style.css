@@ -1,3 +1,4 @@
+
 :root {
   --bg: #0c0c0f;
   --surface: #17171c;
@@ -46,8 +47,6 @@ a {
 }
 
 .btn {
-  appearance: none;
-  -webkit-appearance: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -62,8 +61,6 @@ a {
   letter-spacing: 0.5px;
   cursor: pointer;
   transition: var(--transition);
-  font-family: inherit;
-  font-size: 15px;
 }
 
 .btn:hover {
@@ -93,10 +90,12 @@ a {
 .section-title--left {
   text-align: left;
 }
+
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 16px;
   padding: 16px 20px;
   background-color: var(--surface);
@@ -129,7 +128,13 @@ a {
   gap: 5px;
   width: 44px;
   height: 44px;
+  border-radius: 10px;
   cursor: pointer;
+  transition: var(--transition);
+}
+
+.burger:hover {
+  background-color: rgba(255, 87, 34, 0.12);
 }
 
 .burger span {
@@ -140,21 +145,30 @@ a {
   transition: var(--transition);
 }
 
-.burger-toggle:checked ~ .nav {
-  display: flex;
+
+.burger-toggle:checked + .burger span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.burger-toggle:checked + .burger span:nth-child(2) {
+  opacity: 0;
+}
+
+.burger-toggle:checked + .burger span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
 }
 
 .nav {
   display: none;
+  flex-basis: 100%;
   flex-direction: column;
-  gap: 16px;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background-color: var(--surface);
-  padding: 20px;
-  border-bottom: 1px solid var(--border);
+  gap: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.burger-toggle:checked ~ .nav {
+  display: flex;
 }
 
 .nav__link {
@@ -165,6 +179,12 @@ a {
   text-transform: uppercase;
   font-size: 14px;
 }
+
+.nav__link:hover {
+  color: var(--accent);
+}
+
+
 .hero {
   display: flex;
   flex-direction: column;
@@ -188,6 +208,8 @@ a {
   color: var(--text-muted);
   max-width: 520px;
 }
+
+
 .plans {
   padding: 50px 20px;
   max-width: 1200px;
@@ -281,6 +303,7 @@ a {
   color: var(--accent);
   font-weight: bold;
 }
+
 .about {
   display: flex;
   flex-direction: column;
@@ -308,9 +331,7 @@ a {
 .about__text p {
   color: var(--text-muted);
 }
-.nav__link:hover {
-  color: var(--accent);
-}
+
 .feedback {
   padding: 60px 20px;
 }
@@ -356,10 +377,6 @@ a {
   transition: var(--transition);
 }
 
-.form__field textarea {
-  resize: none;
-}
-
 .form__field input:hover,
 .form__field textarea:hover {
   border-color: var(--text-muted);
@@ -374,9 +391,11 @@ a {
 
 .btn--submit {
   width: 100%;
-  background-color: var(--accent);
-  color: #fff;
 }
+
+/* =========================================
+   7. ФУТЕР
+   ========================================= */
 .footer {
   display: flex;
   flex-direction: column;
@@ -399,6 +418,7 @@ a {
 .footer__contacts a:hover {
   color: var(--accent);
 }
+
 @media (min-width: 768px) {
   .header {
     padding: 20px 40px;
@@ -411,9 +431,8 @@ a {
 
   .nav {
     display: flex;
+    flex-basis: auto;
     flex-direction: row;
-    position: static;
-    background: none;
     border: none;
     padding: 0;
     gap: 28px;
@@ -454,10 +473,11 @@ a {
 
   .footer__contacts {
     flex-direction: row;
-    
     gap: 24px;
   }
 }
+
+
 @media (min-width: 1200px) {
   .hero {
     padding: 110px 20px;
