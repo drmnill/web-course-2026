@@ -9,23 +9,20 @@
 <body>
   <div class="page">
 
- <header class=«header»>
-      <div class=«logo»>PULSE<span>GYM</span></div>
-
-      <input type=«checkbox» id=«burger-toggle» class=«burger-toggle»>
-      <label class=«burger» for=«burger-toggle» aria-label=«Открыть меню»>
-        <span></span>
+    <header class="header">
+      <div class="logo">PULSE<span>GYM</span></div>
+      <input type="checkbox" id="burger-toggle" class="burger-toggle">
+       <label class="burger" for="burger-toggle" aria-label="Открыть меню">
+        <nav class="nav" id="nav">
+      <span></span>
         <span></span>
         <span></span>
       </label>
-
-      <nav class=«nav» id=«nav»>
-        <a href=«#hero» class=«nav__link»>Главная</a>
-        <a href=«#plans» class=«nav__link»>Абонементы</a>
-        <a href=«#about» class=«nav__link»>О зале</a>
-        <a href=«#feedback» class=«nav__link»>Контакты</a>
+        <a href="#hero" class="nav__link">Главная</a>
+        <a href="#plans" class="nav__link">Абонементы</a>
+        <a href="#about" class="nav__link">О зале</a>
+        <a href="#feedback" class="nav__link">Контакты</a>
       </nav>
-    </header>
      
        
       
@@ -99,36 +96,3 @@
       <section class="feedback" id="feedback">
         <div class="feedback__box">
           <h2 class="section-title">Записаться на пробное занятие</h2>
-
-          <form class="form" action="#">
-              <div class="form__field">
-              <label for="name">Ваше имя *</label>
-              <input type="text" id="name" name="name" placeholder="Качок Качковский" required>
-            </div>
-            <div class="form__field">
-              <label for="phone">Телефон *</label>
-              <input type="tel" id="phone" name="phone" placeholder="+375 (29) XXX-XX-XX" required>
-            </div>
-            <div class="form__field">
-              <label for="message">Комментарий</label>
-              <textarea id="message" name="message" rows="4" placeholder="Какая цель тренировок?"></textarea>
-            </div>
-            <button type="submit" class="btn btn--submit">Отправить заявку</button>
-          </form>
-        </div>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <div class="footer__info">
-        <p>&copy; 2026 PULSE GYM. Все права защищены.</p>
-      </div>
-      <div class="footer__contacts">
-        <a href="tel:+375291112233">+375 (29) 111-22-33</a>
-        <a href="mailto:hello@pulsegym.by">hello@pulsegym.by</a>
-      </div>
-    </footer>
-
-  </div>
-</body>
-</html>
