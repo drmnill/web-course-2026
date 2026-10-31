@@ -9,29 +9,25 @@
 <body>
   <div class="page">
 
-<header class=«header»>
-      <div class=«logo»>PULSE<span>GYM</span></div>
+    <header class="header">
+      <div class="logo">PULSE<span>GYM</span></div>
 
-      <input type=«checkbox» id=«burger-toggle» class=«burger-toggle»>
-      <label class=«burger» for=«burger-toggle» aria-label=«Открыть меню»>
+      <button type="button" class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav">
         <span></span>
         <span></span>
         <span></span>
-      </label>
+      </button>
 
-      <nav class=«nav» id=«nav»>
-        <a href=«#hero» class=«nav__link»>Главная</a>
-        <a href=«#plans» class=«nav__link»>Абонементы</a>
-        <a href=«#about» class=«nav__link»>О зале</a>
-        <a href=«#feedback» class=«nav__link»>Контакты</a>
+      <nav class="nav" id="nav">
+        <a href="#hero" class="nav__link">Главная</a>
+        <a href="#plans" class="nav__link">Абонементы</a>
+        <a href="#about" class="nav__link">О зале</a>
+        <a href="#feedback" class="nav__link">Контакты</a>
       </nav>
-    </header>
-     
-       
-      
     </header>
 
     <main class="main">
+
       <section class="hero" id="hero">
         <h1 class="hero__title">СИЛА НАЧИНАЕТСЯ ЗДЕСЬ</h1>
         <p class="hero__desc">Свободные веса, тренажёры нового поколения и тренеры, которые доведут тебя до цели.</p>
@@ -86,16 +82,85 @@
       </section>
 
       <section class="about" id="about">
-         <div class="about__media">
+        <div class="about__media">
           <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=800&q=80" alt="Зал PULSE GYM">
         </div>
         <div class="about__text">
           <h2 class="section-title section-title--left">Почему PULSE GYM</h2>
           <p>700 м² тренировочного пространства, современное оборудование и тренеры с сертификатами международного уровня.</p>
-          <p>Отдельная зона со свободными весами, кардио-зона с окнами во всю стену и бесплатная парковка для клиентов клуба.</p>
+          <p>Отдельная зона для кроссфита, кардио-зона с окнами во всю стену и бесплатная парковка для клиентов клуба.</p>
         </div>
       </section>
 
       <section class="feedback" id="feedback">
         <div class="feedback__box">
           <h2 class="section-title">Записаться на пробное занятие</h2>
+
+          <form class="form">
+            <div class="form__field">
+              <label for="name">Имя</label>
+              <input type="text" id="name" name="name" placeholder="Иван Иванов">
+            </div>
+            <div class="form__field">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="ivan@example.com">
+            </div>
+            <div class="form__field">
+              <label for="message">Сообщение</label>
+              <textarea id="message" name="message" rows="4" placeholder="Какая цель тренировок?"></textarea>
+            </div>
+            <button type="submit" class="btn btn--submit">Отправить</button>
+          </form>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="footer">
+      <div class="footer__info">
+        <p>&copy; 2026 PULSE GYM. Все права защищены.</p>
+      </div>
+      <div class="footer__contacts">
+        <a href="tel:+375291112233">+375 (29) 111-22-33</a>
+        <a href="mailto:hello@pulsegym.by">hello@pulsegym.by</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    const burger = document.getElementById("burger");
+    const nav = document.getElementById("nav");
+    const desktopQuery = window.matchMedia("(min-width: 768px)");
+
+    function setMenu(isOpen) {
+      nav.classList.toggle("nav--open", isOpen);
+      burger.classList.toggle("burger--open", isOpen);
+      burger.setAttribute("aria-expanded", String(isOpen));
+      burger.setAttribute("aria-label", isOpen ? "Закрыть меню" : "Открыть меню");
+    }
+
+    burger.addEventListener("click", () => {
+      setMenu(!nav.classList.contains("nav--open"));
+    });
+
+    nav.addEventListener("click", (event) => {
+      if (event.target.closest(".nav__link")) {
+        setMenu(false);
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        setMenu(false);
+      }
+    });
+
+    desktopQuery.addEventListener("change", (event) => {
+      if (event.matches) {
+        setMenu(false);
+      }
+    });
+  </script>
+</body>
+</html>
