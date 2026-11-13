@@ -1,89 +1,66 @@
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-[hidden] {
-  display: none !important;
-}
-
-:root {
-  --bg: #0b100e;
-  --surface: #121a16;
-  --border: #23322a;
-  --text: #e4ece7;
-  --muted: #86978d;
-  --accent: #7ee0a0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-  font-family: "Segoe UI", system-ui, -apple-system, Tahoma, sans-serif;
-  color: var(--text);
-  background-color: var(--bg);
-  /* мягкие пятна по углам: зелёное сверху слева, коралловое снизу справа */
-  background-image:
-    radial-gradient(circle 55vmax at 0% 0%, rgba(126, 224, 160, 0.13), transparent 70%),
-    radial-gradient(circle 55vmax at 100% 100%, rgba(255, 122, 107, 0.10), transparent 70%);
-  background-attachment: fixed;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px 16px;
-  line-height: 1.5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #1e1e24;
+    color: #f4f4f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
-.app {
-  width: 100%;
-  max-width: 452px;
+.game-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
 }
 
-/* ===== Карточка игры ===== */
-
-.game {
-  background-color: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.score-board {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #4ade80;
 }
 
-.game__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+.canvas-container {
+    background-color: #2a2a35;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
-.game__title {
-  font-size: 26px;
-  font-weight: 600;
-  letter-spacing: 3px;
+canvas {
+    display: block;
+    background-color: #111;
+    border-radius: 8px;
 }
 
-.score {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  padding: 6px 16px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background-color: var(--bg);
+.restart-btn {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
 }
 
-.score__label {
-  font-size: 13px;
-  color: var(--muted);
+.restart-btn:hover {
+    background-color: #2563eb;
 }
 
-.score__value {
-  min-width: 2ch;
-  text-align: right;
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--accent);
-  font-variant-numeric: tabular-nums;
+.restart-btn:active {
+    transform: scale(0.96);
+}
+
+.controls {
+    color: #9ca3af;
+    font-size: 0.9rem;
 }
