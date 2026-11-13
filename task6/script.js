@@ -1,383 +1,228 @@
-// ===== Константы =====
+// настройки и DOM 
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const scoreElement = document.getElementById('score');
+const restartBtn = document.getElementById('restart-btn');
 
-const GRID_SIZE = 20;                      // поле 20 x 20 клеток
-const CELL_SIZE = 20;                      // клетка 20 x 20 px
-const CANVAS_SIZE = GRID_SIZE * CELL_SIZE; // 400 x 400 px
-const MOVE_INTERVAL_MS = 140;              // один шаг змейки раз в 140 мс (не зависит от частоты кадров)
-const START_LENGTH = 3;                    // начальная длина змейки
-const MAX_QUEUED_TURNS = 2;                // сколько нажатий стрелок запоминаем между шагами
+const GRID_SIZE = 20;         // размер одной клетки (20px)
+const TILE_COUNT = 20;        // 400 / 20 = 20 клеток по ширине/высоте
+const MOVE_INTERVAL = 150;    // время между шагами змейки в мс 
+//  состояние игры 
+let snake = [];
+let direction = { x: 1, y: 0 };      // текущее направление (изначально вправо)
+let nextDirection = { x: 1, y: 0 };  // буфер для нажатий клавиш
+let apple = { x: 0, y: 0 };
+let score = 0;
+let isGameOver = false;
+let lastMoveTime = 0;
+let rafId = null;                    // id текущего кадра
 
-const DIRECTIONS = {
-  ArrowUp: { x: 0, y: -1 },
-  ArrowDown: { x: 0, y: 1 },
-  ArrowLeft: { x: -1, y: 0 },
-  ArrowRight: { x: 1, y: 0 },
-};
-
-const COLORS = {
-  cellLight: "#16201b",
-  cellDark: "#131b17",
-  snakeHead: [126, 224, 160],
-  snakeTail: [52, 120, 86],
-  apple: "#ff7a6b",
-  leaf: "#7ee0a0",
-  overlay: "rgba(8, 12, 10, 0.76)",
-  text: "#e4ece7",
-  muted: "#9aaba1",
-};
-
-// ===== Элементы страницы =====
-
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
-const scoreEl = document.getElementById("score");
-const hintEl = document.getElementById("hint");
-const restartBtn = document.getElementById("restart-btn");
-
-// ===== Состояние игры (только данные, без рисования) =====
-
-let state = createInitialState();
-let rafId = null;        // id текущего кадра, чтобы не запускать два цикла сразу
-let lastMoveTime = null; // момент последнего шага змейки
-
-function createInitialState() {
-  const startX = Math.floor(GRID_SIZE / 2);
-  const startY = Math.floor(GRID_SIZE / 2);
-  const snake = [];
-
-  // голова первая в массиве, тело тянется влево от неё
-  for (let i = 0; i < START_LENGTH; i++) {
-    snake.push({ x: startX - i, y: startY });
-  }
-
-  return {
-    snake,                          // массив координат сегментов
-    direction: DIRECTIONS.ArrowRight, // направление последнего сделанного шага
-    inputQueue: [],                 // повороты, которые игрок нажал, но они ещё не применены
-    apple: null,                    // { x, y }
-    score: 0,
-    gameOver: false,
-    won: false,
-  };
+function initGame() {
+    // изначально 3 сегмента
+    snake = [
+        { x: 10, y: 10 }, // голова
+        { x: 9, y: 10 },  
+        { x: 8, y: 10 }   // хвост
+    ];
+    direction = { x: 1, y: 0 };
+    nextDirection = { x: 1, y: 0 };
+    score = 0;
+    isGameOver = false;
+    scoreElement.textContent = score;
+    
+    spawnApple();
+    
+    lastMoveTime = performance.now();
+    // если рестарт остановка старого цикла  и запускаем новый
+    if (rafId !== null) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(gameLoop);
 }
 
-// ===== Настройка canvas =====
-
-function setupCanvas() {
-  // логический размер остаётся 400 x 400, но на «ретине» рисуем чётче
-  const ratio = window.devicePixelRatio || 1;
-  canvas.width = CANVAS_SIZE * ratio;
-  canvas.height = CANVAS_SIZE * ratio;
-  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-}
-// ===== Яблоко =====
-
-function getFreeCells() {
-  const occupied = new Set(state.snake.map((segment) => `${segment.x},${segment.y}`));
-  const free = [];
-
-  for (let y = 0; y < GRID_SIZE; y++) {
-    for (let x = 0; x < GRID_SIZE; x++) {
-      if (!occupied.has(`${x},${y}`)) {
-        free.push({ x, y });
-      }
-    }
-  }
-  return free;
-}
-
+//  генерация яблока в свободной клетке 
 function spawnApple() {
-  const freeCells = getFreeCells();
+    let newApple;
+    let isOccupied = true;
 
-  if (freeCells.length === 0) {
-    state.apple = null; // змейка заняла всё поле
-    return false;
-  }
-
-  state.apple = freeCells[Math.floor(Math.random() * freeCells.length)];
-  return true;
-}
-
-function isAppleAt(cell) {
-  return state.apple !== null && state.apple.x === cell.x && state.apple.y === cell.y;
-}
-// ===== Управление =====
-
-function isSameDirection(a, b) {
-  return a.x === b.x && a.y === b.y;
-}
-
-function isOppositeDirection(a, b) {
-  return a.x === -b.x && a.y === -b.y;
-}
-
-function queueDirection(next) {
-  if (state.gameOver) return;
-  if (state.inputQueue.length >= MAX_QUEUED_TURNS) return;
-
-  // сравниваем с последним поворотом в очереди, а если очереди нет — с текущим направлением
-  const last = state.inputQueue.length > 0
-    ? state.inputQueue[state.inputQueue.length - 1]
-    : state.direction;
-
-  // разворот на 180° и повтор того же направления просто игнорируем
-  if (isSameDirection(next, last) || isOppositeDirection(next, last)) return;
-
-  state.inputQueue.push(next);
-}
-
-function handleKeydown(event) {
-  if (state.gameOver && event.key === "Enter") {
-    startGame();
-    return;
-  }
-
-  const direction = DIRECTIONS[event.key];
-  if (!direction) return;
-
-  event.preventDefault(); // чтобы стрелки не прокручивали страницу
-  queueDirection(direction);
-}
-// ===== Логика игры =====
-
-function applyQueuedDirection() {
-  if (state.inputQueue.length > 0) {
-    state.direction = state.inputQueue.shift();
-  }
-}
-
-function getNextHead() {
-  const head = state.snake[0];
-  return {
-    x: head.x + state.direction.x,
-    y: head.y + state.direction.y,
-  };
-}
-
-function checkCollision(head, willGrow) {
-  const hitsWall =
-    head.x < 0 || head.x >= GRID_SIZE || head.y < 0 || head.y >= GRID_SIZE;
-  if (hitsWall) return true;
-
-  // если змейка не растёт, её хвост в этот шаг уйдёт — в его клетку заходить можно
-  const body = willGrow ? state.snake : state.snake.slice(0, -1);
-  return body.some((segment) => segment.x === head.x && segment.y === head.y);
-}
-
-function moveSnake(head, grow) {
-  state.snake.unshift(head);
-  if (!grow) {
-    state.snake.pop();
-  }
-}
-
-function updateScoreDisplay() {
-  scoreEl.textContent = state.score;
-}
-
-function endGame(won) {
-  state.gameOver = true;
-  state.won = won;
-  restartBtn.hidden = false;
-  hintEl.hidden = true;
-}
-
-function update() {
-  applyQueuedDirection();
-
-  const head = getNextHead();
-  const willGrow = isAppleAt(head);
-
-  if (checkCollision(head, willGrow)) {
-    endGame(false);
-    return;
-  }
-
-  moveSnake(head, willGrow);
-
-  if (willGrow) {
-    state.score += 1;
-    updateScoreDisplay();
-
-    if (!spawnApple()) {
-      endGame(true);
+    while (isOccupied) {
+        newApple = {
+            x: Math.floor(Math.random() * TILE_COUNT),
+            y: Math.floor(Math.random() * TILE_COUNT)
+        };
+        //  не находится ли яблоко внутри змейки
+        isOccupied = snake.some(segment => segment.x === newApple.x && segment.y === newApple.y);
     }
-  }
-}
-// ===== Отрисовка (только рисует по текущему state) =====
-
-function fillRoundedRect(x, y, width, height, radius) {
-  ctx.beginPath();
-  ctx.moveTo(x + radius, y);
-  ctx.arcTo(x + width, y, x + width, y + height, radius);
-  ctx.arcTo(x + width, y + height, x, y + height, radius);
-  ctx.arcTo(x, y + height, x, y, radius);
-  ctx.arcTo(x, y, x + width, y, radius);
-  ctx.closePath();
-  ctx.fill();
+    
+    apple = newApple;
 }
 
-function mixColor(from, to, t) {
-  const channel = (i) => Math.round(from[i] + (to[i] - from[i]) * t);
-  return `rgb(${channel(0)}, ${channel(1)}, ${channel(2)})`;
-}
-
-function drawBoard() {
-  for (let y = 0; y < GRID_SIZE; y++) {
-    for (let x = 0; x < GRID_SIZE; x++) {
-      ctx.fillStyle = (x + y) % 2 === 0 ? COLORS.cellLight : COLORS.cellDark;
-      ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+// логика движения 
+function moveSnake() {
+    // применяем накопленное направление
+    direction = { ...nextDirection };
+    // вычисление новой головы
+    const head = snake[0];
+    const newHead = {
+        x: head.x + direction.x,
+        y: head.y + direction.y
+    };
+    // добавляет новую голову в начало массива
+    snake.unshift(newHead);
+    //  съели ли яблоко
+    if (newHead.x === apple.x && newHead.y === apple.y) {
+        score++;
+        scoreElement.textContent = score;
+        spawnApple();
+    } else {
+        // если не съел, удаляем последний сегмент (хвост)
+        snake.pop();
     }
-  }
 }
 
-function drawApple() {
-  if (!state.apple) return;
-
-  const cx = state.apple.x * CELL_SIZE + CELL_SIZE / 2;
-  const cy = state.apple.y * CELL_SIZE + CELL_SIZE / 2;
-
-  ctx.fillStyle = COLORS.apple;
-  ctx.beginPath();
-  ctx.arc(cx, cy + 1, CELL_SIZE * 0.38, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.fillStyle = "rgba(255, 255, 255, 0.35)"; // блик
-  ctx.beginPath();
-  ctx.arc(cx - 3, cy - 2, 2.2, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.fillStyle = COLORS.leaf; // листик
-  ctx.beginPath();
-  ctx.ellipse(cx + 3, cy - CELL_SIZE * 0.34, 3.5, 2, -0.5, 0, Math.PI * 2);
-  ctx.fill();
+// проверка столкновений 
+function checkCollision() {
+    const head = snake[0];
+    // столкновение со стеной
+    if (head.x < 0 || head.x >= TILE_COUNT || head.y < 0 || head.y >= TILE_COUNT) {
+        isGameOver = true;
+        return;
+    }
+    // столкновение с собственным телом (начиная со 2 сегмента)
+    for (let i = 1; i < snake.length; i++) {
+        if (head.x === snake[i].x && head.y === snake[i].y) {
+            isGameOver = true;
+            return;
+        }
+    }
 }
 
-function drawEyes() {
-  const head = state.snake[0];
-  const dir = state.direction;
-  const cx = head.x * CELL_SIZE + CELL_SIZE / 2;
-  const cy = head.y * CELL_SIZE + CELL_SIZE / 2;
+// обновление состояния 
+function update(currentTime) {
+    if (isGameOver) return;
+    // проверяем, прошло ли достаточно времени с последнего шага
+    if (currentTime - lastMoveTime >= MOVE_INTERVAL) {
+        lastMoveTime = currentTime;
+        moveSnake();
+        checkCollision();
+    }
+}
 
-  // глаза смещены вперёд по ходу движения и в стороны
-  const eyes = [
-    { x: cx + dir.x * 3 - dir.y * 4, y: cy + dir.y * 3 + dir.x * 4 },
-    { x: cx + dir.x * 3 + dir.y * 4, y: cy + dir.y * 3 - dir.x * 4 },
-  ];
-
-  eyes.forEach((eye) => {
-    ctx.fillStyle = "#ffffff";
+// сетка из клеток 
+function drawGrid() {
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.07)';
+    ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.arc(eye.x, eye.y, 2.4, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = "#101614";
-    ctx.beginPath();
-    ctx.arc(eye.x + dir.x, eye.y + dir.y, 1.2, 0, Math.PI * 2);
-    ctx.fill();
-  });
+    for (let i = 0; i <= TILE_COUNT; i++) {
+        const pos = i * GRID_SIZE + 0.5; // +0.5, чтобы линия была чёткой в 1px
+        ctx.moveTo(pos, 0);              // вертикальная линия
+        ctx.lineTo(pos, canvas.height);
+        ctx.moveTo(0, pos);              // горизонтальная линия
+        ctx.lineTo(canvas.width, pos);
+    }
+    ctx.stroke();
 }
 
-function drawSnake() {
-  const lastIndex = state.snake.length - 1;
+// глаза на голове показывают направление движения ---
+function drawEyes(head) {
+    const cx = head.x * GRID_SIZE + GRID_SIZE / 2;
+    const cy = head.y * GRID_SIZE + GRID_SIZE / 2;
+    // глаза смещены вперёд по ходу движения и в стороны
+    const eyes = [
+        { x: cx + direction.x * 3 - direction.y * 4, y: cy + direction.y * 3 + direction.x * 4 },
+        { x: cx + direction.x * 3 + direction.y * 4, y: cy + direction.y * 3 - direction.x * 4 }
+    ];
 
-  state.snake.forEach((segment, index) => {
-    const t = lastIndex === 0 ? 0 : index / lastIndex; // 0 у головы, 1 у хвоста
-    ctx.fillStyle = mixColor(COLORS.snakeHead, COLORS.snakeTail, t);
-    fillRoundedRect(
-      segment.x * CELL_SIZE + 1,
-      segment.y * CELL_SIZE + 1,
-      CELL_SIZE - 2,
-      CELL_SIZE - 2,
-      6
-    );
-  });
-
-  drawEyes();
+    ctx.fillStyle = '#111';
+    eyes.forEach(eye => {
+        ctx.beginPath();
+        ctx.arc(eye.x, eye.y, 2, 0, Math.PI * 2);
+        ctx.fill();
+    });
 }
 
-function drawGameOver() {
-  ctx.fillStyle = COLORS.overlay;
-  ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-
-  ctx.fillStyle = COLORS.text;
-  ctx.font = "600 32px 'Segoe UI', system-ui, sans-serif";
-  ctx.fillText("Игра окончена", CANVAS_SIZE / 2, CANVAS_SIZE / 2 - 28);
-
-  ctx.fillStyle = COLORS.leaf;
-  ctx.font = "500 22px 'Segoe UI', system-ui, sans-serif";
-  ctx.fillText(`Итоговый счёт: ${state.score}`, CANVAS_SIZE / 2, CANVAS_SIZE / 2 + 14);
-
-  ctx.fillStyle = COLORS.muted;
-  ctx.font = "400 15px 'Segoe UI', system-ui, sans-serif";
-  const note = state.won ? "Ты заполнил всё поле!" : "Enter — начать заново";
-  ctx.fillText(note, CANVAS_SIZE / 2, CANVAS_SIZE / 2 + 54);
-}
-
+// отрисовка 
 function draw() {
-  ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-  drawBoard();
-  drawApple();
-  drawSnake();
+    // очищаем холст
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  if (state.gameOver) {
-    drawGameOver();
-  }
-}
-// ===== Игровой цикл =====
+    drawGrid();
+    // отрисовка яблока (красный круг)
+    ctx.fillStyle = '#ef4444';
+    ctx.beginPath();
+    ctx.arc(
+        apple.x * GRID_SIZE + GRID_SIZE / 2, 
+        apple.y * GRID_SIZE + GRID_SIZE / 2, 
+        GRID_SIZE / 2 - 2, 
+        0, 
+        Math.PI * 2
+    );
+    ctx.fill();
+    // отрисовка змейки: тело зелёное, голова ярко-жёлтая
+    snake.forEach((segment, index) => {
+        ctx.fillStyle = index === 0 ? '#facc15' : '#22c55e';
 
-function gameLoop(timestamp) {
-  if (lastMoveTime === null) {
-    lastMoveTime = timestamp;
-  }
+        ctx.fillRect(
+            segment.x * GRID_SIZE + 1,
+            segment.y * GRID_SIZE + 1,
+            GRID_SIZE - 2,
+            GRID_SIZE - 2
+        );
+    });
 
-  const elapsed = timestamp - lastMoveTime;
-
-  // шаг по времени, а не по кадрам: на 60, 144 или 30 FPS скорость одинаковая
-  if (elapsed >= MOVE_INTERVAL_MS) {
-    update();
-    lastMoveTime = timestamp - (elapsed % MOVE_INTERVAL_MS);
-  }
-
-  draw();
-
-  if (state.gameOver) {
-    rafId = null; // после последнего кадра цикл останавливается
-    return;
-  }
-
-  rafId = requestAnimationFrame(gameLoop);
-}
-
-function startGame() {
-  if (rafId !== null) {
-    cancelAnimationFrame(rafId); // на случай перезапуска посреди игры
-  }
-
-  state = createInitialState();
-  spawnApple();
-  lastMoveTime = null;
-
-  restartBtn.hidden = true;
-  hintEl.hidden = false;
-  updateScoreDisplay();
-
-  rafId = requestAnimationFrame(gameLoop);
+    drawEyes(snake[0]);
+    // отрисовка экрана Game Over
+    if (isGameOver) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 30px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Игра окончена!', canvas.width / 2, canvas.height / 2 - 20);
+        
+        ctx.font = '20px sans-serif';
+        ctx.fillText(`Ваш счёт: ${score}`, canvas.width / 2, canvas.height / 2 + 20);
+    }
 }
 
-// ===== Обработчики событий =====
+// игровой цикл 
+function gameLoop(currentTime) {
+    update(currentTime);
+    draw();
 
-document.addEventListener("keydown", handleKeydown);
-restartBtn.addEventListener("click", startGame);
+    // продолжаем цикл, даже если gameOver, чтобы отрисовать финальный экран
+    if (!isGameOver) {
+        rafId = requestAnimationFrame(gameLoop);
+    }
+}
 
-window.addEventListener("pagehide", () => {
-  if (rafId !== null) cancelAnimationFrame(rafId);
-});
+// управление клавиатурой 
+function handleKeyDown(e) {
+    if (isGameOver) return;
+    // блокируем прокрутку страницы стрелками
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        e.preventDefault();
+    }
+    // запрет на разворот на 180 градусов
+    switch (e.key) {
+        case 'ArrowUp':
+            if (direction.y !== 1) nextDirection = { x: 0, y: -1 };
+            break;
+        case 'ArrowDown':
+            if (direction.y !== -1) nextDirection = { x: 0, y: 1 };
+            break;
+        case 'ArrowLeft':
+            if (direction.x !== 1) nextDirection = { x: -1, y: 0 };
+            break;
+        case 'ArrowRight':
+            if (direction.x !== -1) nextDirection = { x: 1, y: 0 };
+            break;
+    }
+}
 
-// ===== Запуск =====
+// слушатели событий 
+document.addEventListener('keydown', handleKeyDown);
+restartBtn.addEventListener('click', initGame);
 
-setupCanvas();
-startGame();
+// запуск при загрузке страницы
+initGame();
