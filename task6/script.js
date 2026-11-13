@@ -170,13 +170,11 @@ function draw() {
 function gameLoop(currentTime) {
     update(currentTime);
     draw();
-
     // продолжаем цикл, даже если gameOver, чтобы отрисовать финальный экран
     if (!isGameOver) {
         rafId = requestAnimationFrame(gameLoop);
     }
 }
-
 // управление клавиатурой 
 function handleKeyDown(e) {
     if (isGameOver) return;
@@ -200,10 +198,8 @@ function handleKeyDown(e) {
             break;
     }
 }
-
 // слушатели событий 
 document.addEventListener('keydown', handleKeyDown);
 restartBtn.addEventListener('click', initGame);
-
 // запуск при загрузке страницы
 initGame();
