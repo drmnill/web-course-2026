@@ -1,32 +1,26 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Змейка</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Змейка на Canvas</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
 
-  <main class="app">
-    <section class="game">
-      <header class="game__head">
-        <h1 class="game__title">Змейка</h1>
-        <div class="score" aria-live="polite">
-          <span class="score__label">Счёт</span>
-          <strong class="score__value" id="score">0</strong>
+    <main class="game-wrapper">
+        <div class="score-board">
+            Счёт: <span id="score">0</span>
         </div>
-      </header>
 
-      <canvas class="game__canvas" id="game" width="400" height="400" aria-label="Игровое поле Змейки"></canvas>
+        <div class="canvas-container">
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
+        </div>
 
-      <div class="game__footer">
-        <p class="game__hint" id="hint">Управление: стрелки на клавиатуре</p>
-        <button type="button" class="btn" id="restart-btn" hidden>Начать заново</button>
-      </div>
-    </section>
-  </main>
+        <button id="restart-btn" class="restart-btn">Начать заново</button>
+        <p class="controls">Управление: стрелки на клавиатуре</p>
+    </main>
 
-  <script src="script.js" defer></script>
 </body>
 </html>
