@@ -151,7 +151,6 @@ function draw() {
         );
     });
 
-    drawEyes(snake[0]);
     // отрисовка экрана Game Over
     if (isGameOver) {
         ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
