@@ -121,24 +121,6 @@ function drawGrid() {
     ctx.stroke();
 }
 
-// глаза на голове показывают направление движения ---
-function drawEyes(head) {
-    const cx = head.x * GRID_SIZE + GRID_SIZE / 2;
-    const cy = head.y * GRID_SIZE + GRID_SIZE / 2;
-    // глаза смещены вперёд по ходу движения и в стороны
-    const eyes = [
-        { x: cx + direction.x * 3 - direction.y * 4, y: cy + direction.y * 3 + direction.x * 4 },
-        { x: cx + direction.x * 3 + direction.y * 4, y: cy + direction.y * 3 - direction.x * 4 }
-    ];
-
-    ctx.fillStyle = '#111';
-    eyes.forEach(eye => {
-        ctx.beginPath();
-        ctx.arc(eye.x, eye.y, 2, 0, Math.PI * 2);
-        ctx.fill();
-    });
-}
-
 // отрисовка 
 function draw() {
     // очищаем холст
