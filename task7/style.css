@@ -1,0 +1,215 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #120a22;
+  --surface: #1c1233;
+  --border: #3a2a5c;
+  --text: #ece7f7;
+  --muted: #a99cc4;
+  --gold: #e8b94a;
+  --gold-soft: rgba(232, 185, 74, 0.35);
+  --danger: #f0897f;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, Tahoma, sans-serif;
+  color: var(--text);
+  background-color: var(--bg);
+  /* фиолетовый фон с мягкими золотыми и сиреневыми пятнами */
+  background-image:
+    radial-gradient(circle 50vmax at 0% 0%, rgba(124, 77, 255, 0.28), transparent 70%),
+    radial-gradient(circle 45vmax at 100% 0%, rgba(232, 185, 74, 0.14), transparent 70%),
+    radial-gradient(circle 50vmax at 100% 100%, rgba(124, 77, 255, 0.22), transparent 70%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* ===== шапка с поиском ===== */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  background-color: rgba(18, 10, 34, 0.88);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+
+.header__title {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 1px;
+}
+
+.search {
+  flex: 1 1 240px;
+  max-width: 360px;
+  min-height: 44px;
+  padding: 10px 14px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 16px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search::placeholder {
+  color: var(--muted);
+}
+
+.search:hover {
+  border-color: var(--muted);
+}
+
+.search:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-soft);
+}
+
+/* ===== лента ===== */
+
+.main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+.posts {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.post {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--gold);
+  border-radius: 12px;
+  padding: 18px 20px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.post:hover {
+  transform: translateY(-2px);
+  border-color: var(--gold);
+}
+
+.post__author {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background-color: rgba(232, 185, 74, 0.14);
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.post__title {
+  margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.post__body {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+/* ===== сообщения, загрузка, ошибка ===== */
+
+.notice {
+  margin-top: 24px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 24px;
+  color: var(--gold);
+}
+
+.loader__spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid var(--gold-soft);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  padding: 18px 20px;
+  background-color: rgba(240, 137, 127, 0.08);
+  border: 1px solid var(--danger);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.error__text {
+  color: var(--danger);
+}
+
+.btn {
+  appearance: none;
+  -webkit-appearance: none;
+  min-height: 44px;
+  padding: 0 24px;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  background-color: var(--gold);
+  color: var(--bg);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn:hover {
+  background-color: transparent;
+  color: var(--gold);
+}
+
+/* атрибут hidden должен скрывать элемент, даже если у него есть display */
+[hidden] {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader__spinner {
+    animation-duration: 2s;
+  }
+}
